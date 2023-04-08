@@ -27,21 +27,143 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vht-2B-qIu">
+                                <rect key="frame" x="0.0" y="774" width="393" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem systemItem="add" id="Rlw-QO-ELs">
+                                        <connections>
+                                            <action selector="addBtn:" destination="BYZ-38-t0r" id="pBU-Pg-DUQ"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="Cml-Rx-Rd3"/>
                     <connections>
                         <outlet property="mapView" destination="QKI-Y9-akJ" id="drA-Nx-BjN"/>
                         <outlet property="tableView" destination="HPZ-6g-X2b" id="LRY-6D-jpP"/>
+                        <segue destination="eGN-aS-DZr" kind="show" identifier="goToDetailsScreen" id="QuO-IG-yIT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="46.564885496183201" y="-2.1126760563380285"/>
         </scene>
+        <!--Details View Controller-->
+        <scene sceneID="f2V-fU-Peq">
+            <objects>
+                <viewController id="eGN-aS-DZr" customClass="DetailsViewController" customModule="project_2" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="asV-Rw-P57">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="27" translatesAutoresizingMaskIntoConstraints="NO" id="1Aq-KB-JJI">
+                                <rect key="frame" x="76.666666666666686" y="207" width="240" height="369"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MZQ-Qd-btu">
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="240" id="Cit-5J-qgx"/>
+                                            <constraint firstAttribute="height" constant="128" id="HMO-BC-fAL"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temp" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L5D-YF-aiD">
+                                        <rect key="frame" x="55.666666666666671" y="155" width="128.33333333333331" height="47"/>
+                                        <fontDescription key="fontDescription" name="HiraginoSans-W3" family="Hiragino Sans" pointSize="47"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i0b-mn-Lw3">
+                                        <rect key="frame" x="60.333333333333329" y="229" width="118.99999999999999" height="31.333333333333314"/>
+                                        <fontDescription key="fontDescription" name="GillSans-Bold" family="Gill Sans" pointSize="27"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rww-G6-GEQ">
+                                        <rect key="frame" x="99.333333333333329" y="287.33333333333331" width="41.333333333333329" height="20.333333333333314"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mHc-dp-brI">
+                                        <rect key="frame" x="82.333333333333343" y="334.66666666666663" width="75.333333333333343" height="34.333333333333314"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Toggle"/>
+                                        <connections>
+                                            <action selector="tempratureTypeBtn:" destination="eGN-aS-DZr" eventType="touchUpInside" id="cj5-xi-7bm"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="jgh-8f-RAF">
+                                <rect key="frame" x="15" y="30" width="363" height="36"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter location" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MZT-l7-Uau">
+                                        <rect key="frame" x="0.0" y="0.0" width="309.33333333333331" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="search"/>
+                                        <connections>
+                                            <action selector="searchLocation:" destination="eGN-aS-DZr" eventType="editingDidEnd" id="y3B-BE-Q6Z"/>
+                                        </connections>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NVS-yy-iUy">
+                                        <rect key="frame" x="313.33333333333331" y="0.0" width="49.666666666666686" height="36"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="magnifyingglass" catalog="system"/>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="363" id="8Dz-Lw-daV"/>
+                                    <constraint firstAttribute="height" constant="36" id="R8x-Xb-D9L"/>
+                                </constraints>
+                            </stackView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Is-PN-4rd">
+                                <rect key="frame" x="0.0" y="713" width="393" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem title="Cancel" id="M5j-2f-1EY">
+                                        <connections>
+                                            <action selector="cancelBtn:" destination="eGN-aS-DZr" id="eoc-1O-OlV"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="SA6-mk-dC4"/>
+                                    <barButtonItem title="Item" image="plus" catalog="system" id="FyJ-XJ-B8M">
+                                        <connections>
+                                            <action selector="addWeatherLocationBtn:" destination="eGN-aS-DZr" id="qKI-DX-619"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="yru-3y-bAV"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="jgh-8f-RAF" firstAttribute="top" secondItem="asV-Rw-P57" secondAttribute="top" constant="30" id="2R9-3k-pNn"/>
+                            <constraint firstItem="1Aq-KB-JJI" firstAttribute="centerX" secondItem="asV-Rw-P57" secondAttribute="centerX" id="jV1-gx-2UD"/>
+                            <constraint firstItem="jgh-8f-RAF" firstAttribute="centerX" secondItem="asV-Rw-P57" secondAttribute="centerX" id="woF-6N-zaE"/>
+                            <constraint firstItem="1Aq-KB-JJI" firstAttribute="centerY" secondItem="asV-Rw-P57" secondAttribute="centerY" id="zo4-1H-x7D"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="conditionsLabel" destination="rww-G6-GEQ" id="DII-mp-NMC"/>
+                        <outlet property="locationName" destination="i0b-mn-Lw3" id="hLp-c9-Iy6"/>
+                        <outlet property="searchTextField" destination="MZT-l7-Uau" id="w2z-SB-9oR"/>
+                        <outlet property="tempratureLabel" destination="L5D-YF-aiD" id="54d-MK-WuH"/>
+                        <outlet property="weatherImage" destination="MZQ-Qd-btu" id="blS-Cg-O3S"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bUj-za-Oc6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="865" y="-2"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="magnifyingglass" catalog="system" width="128" height="117"/>
+        <image name="plus" catalog="system" width="128" height="113"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

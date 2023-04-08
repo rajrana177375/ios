@@ -23,33 +23,43 @@ class ViewController: UIViewController {
         
         locationManager.requestWhenInUseAuthorization()
         mapSetup()
-        addAnnotation()
-        
+
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
+        addAnnotation()
+        
+    }
+    
+    
+    @IBAction func addBtn(_ sender: Any) {
+        performSegue(withIdentifier: "goToDetailsScreen", sender: self)
+
     }
     
     private func addAnnotation() {
-        
+
         guard let location = locationManager.location else {
             return
         }
-        
+
         loadWeather(search: "\(location.coordinate.latitude),\(location.coordinate.longitude)") { weatherResponse in
             if let weather = weatherResponse {
                 let annotation = MyAnnotation(coordinate: location.coordinate, title: weather.current.condition.text, subtitle: "Temperature: \(weather.current.temp_c)°C", iconUrl: "https:\(weather.current.condition.icon)", temperature: weather.current.temp_c)
-                
+
                 self.mapView.addAnnotation(annotation)
-                
+
+
             } else {
 
             }
         }
-        
+
     }
+
     
+
     private func mapSetup() {
         mapView.delegate = self
         
@@ -134,9 +144,9 @@ extension ViewController: MKMapViewDelegate, UITableViewDataSource, UITableViewD
 
             let button = UIButton(type: .detailDisclosure)
             button.tag = 10000
+            
             view.rightCalloutAccessoryView = button
 
-            view.markerTintColor = UIColor.purple
             view.tintColor = UIColor.systemRed
         }
 
