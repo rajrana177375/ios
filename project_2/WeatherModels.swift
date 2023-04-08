@@ -4,7 +4,7 @@
 //
 //  Created by Account on 2023-04-08.
 //
-
+import MapKit
 import Foundation
 
 struct WeatherResponse: Decodable {
@@ -46,4 +46,14 @@ struct Day: Decodable {
     let maxtemp_f: Float
     let mintemp_c: Float
     let mintemp_f: Float
+    let condition: Conditions
+}
+
+struct LocationItem {
+    var locationName: String
+    var temperature: String
+    var weatherIconUrl: String
+    var coordinate: CLLocationCoordinate2D
+    var temperatureValue: Float
+    let weatherData: WeatherResponse
 }

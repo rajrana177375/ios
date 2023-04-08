@@ -46,7 +46,8 @@ class ViewController: UIViewController, DetailsViewControllerDelegate {
                                             temperature: "\(data.current.temp_c)C (H:\(forecastDay.day.maxtemp_c) L:\(forecastDay.day.mintemp_c))",
                                             weatherIconUrl: "https:\(data.current.condition.icon)",
                                             coordinate: CLLocationCoordinate2D(latitude: data.location.lat, longitude: data.location.lon),
-                                            temperatureValue: data.current.temp_c) // Add this line
+                                            temperatureValue: data.current.temp_c,
+                                            weatherData: data)
             locationItems.append(locationItem)
             tableView.reloadData()
         }
@@ -92,10 +93,6 @@ class ViewController: UIViewController, DetailsViewControllerDelegate {
         let region = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: radiusInMetres, longitudinalMeters: radiusInMetres)
         
         mapView.setRegion(region, animated: true)
-        
-        //        //camera boundries
-        //        let cameraBoundry = MKMapView.CameraBoundary(coordinateRegion: region)
-        //        mapView.setCameraBoundary(cameraBoundry, animated: true)
         
         //control zooming
         let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 1000)
@@ -217,22 +214,16 @@ extension ViewController: MKMapViewDelegate, UITableViewDataSource, UITableViewD
         task.resume()
     }
     
-    
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        guard let coordinates = view.annotation?.coordinate else {
-            return
+        if let detailsViewController = storyboard?.instantiateViewController(withIdentifier: "goToWeatherDetail") as? WeatherDetailView {
+
+            if let annotation = view.annotation as? MyAnnotation {
+                detailsViewController.coordinate = "\(annotation.coordinate.latitude), \(annotation.coordinate.longitude)"
+            }
+
+            present(detailsViewController, animated: true, completion: nil)
         }
-        
-        let launchOptions = [
-            MKLaunchOptionsDirectionsModeKey: MKLaunchOptionsDirectionsModeWalking
-        ]
-        
-        let mapItem = MKMapItem(placemark: MKPlacemark(coordinate: coordinates))
-        
-        mapItem.openInMaps(launchOptions: launchOptions)
-        print("I am pressed \(control.tag)")
     }
-    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return locationItems.count
@@ -312,12 +303,4 @@ private func getUrl(query: String) -> URL? {
     print(url)
     
     return URL(string: url)
-}
-
-struct LocationItem {
-    var locationName: String
-    var temperature: String
-    var weatherIconUrl: String
-    var coordinate: CLLocationCoordinate2D
-    var temperatureValue: Float
 }
