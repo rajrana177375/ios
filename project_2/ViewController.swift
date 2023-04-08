@@ -8,7 +8,7 @@
 import UIKit
 import MapKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, DetailsViewControllerDelegate {
     
     
     @IBOutlet weak var tableView: UITableView!
@@ -17,49 +17,69 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var mapView: MKMapView!
     
+    var myData: WeatherResponse?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
         locationManager.requestWhenInUseAuthorization()
         mapSetup()
-
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
-        addAnnotation()
+        addAnnotation(location: locationManager.location ?? getFanshaweLocation())
         
     }
     
     
-    @IBAction func addBtn(_ sender: Any) {
-        performSegue(withIdentifier: "goToDetailsScreen", sender: self)
-
+    func getFanshaweLocation() -> CLLocation {
+        return CLLocation(latitude: 43.0130, longitude: -81.1994)
     }
     
-    private func addAnnotation() {
-
-        guard let location = locationManager.location else {
-            return
+    
+    func didAddWeatherData(_ data: WeatherResponse) {
+        if let forecastDay = data.forecast.forecastday.first {
+            let locationItem = LocationItem(locationName: data.location.name,
+                                            temperature: "\(data.current.temp_c)C (H:\(forecastDay.day.maxtemp_c) L:\(forecastDay.day.mintemp_c))",
+                                            weatherIconUrl: "https:\(data.current.condition.icon)",
+                                            coordinate: CLLocationCoordinate2D(latitude: data.location.lat, longitude: data.location.lon),
+                                            temperatureValue: data.current.temp_c) // Add this line
+            locationItems.append(locationItem)
+            tableView.reloadData()
         }
-
+        
+    }
+    
+    @IBAction func addBtn(_ sender: Any) {
+        if let detailsViewController = storyboard?.instantiateViewController(withIdentifier: "goToDetailsScreen") as? DetailsViewController {
+            detailsViewController.delegate = self
+            detailsViewController.modalPresentationStyle = .fullScreen
+            present(detailsViewController, animated: true, completion: nil)
+        }
+        
+    }
+    
+    
+    private func addAnnotation(location: CLLocation) {
         loadWeather(search: "\(location.coordinate.latitude),\(location.coordinate.longitude)") { weatherResponse in
             if let weather = weatherResponse {
-                let annotation = MyAnnotation(coordinate: location.coordinate, title: weather.current.condition.text, subtitle: "Temperature: \(weather.current.temp_c)°C", iconUrl: "https:\(weather.current.condition.icon)", temperature: weather.current.temp_c)
-
-                self.mapView.addAnnotation(annotation)
-
-
+                if let forecastDay = weather.forecast.forecastday.first {
+                    let annotation = MyAnnotation(coordinate: location.coordinate, title: weather.current.condition.text, subtitle: "\(weather.current.temp_c)C (H:\(forecastDay.day.maxtemp_c) L:\(forecastDay.day.mintemp_c))", iconUrl: "https:\(weather.current.condition.icon)", temperature: weather.current.temp_c)
+                    
+                    self.mapView.addAnnotation(annotation)
+                }
             } else {
-
+                print("Cannot load weather")
             }
         }
-
+        
     }
-
     
-
+    
+    
     private func mapSetup() {
         mapView.delegate = self
         
@@ -73,9 +93,9 @@ class ViewController: UIViewController {
         
         mapView.setRegion(region, animated: true)
         
-        //camera boundries
-        let cameraBoundry = MKMapView.CameraBoundary(coordinateRegion: region)
-        mapView.setCameraBoundary(cameraBoundry, animated: true)
+        //        //camera boundries
+        //        let cameraBoundry = MKMapView.CameraBoundary(coordinateRegion: region)
+        //        mapView.setCameraBoundary(cameraBoundry, animated: true)
         
         //control zooming
         let zoomRange = MKMapView.CameraZoomRange(maxCenterCoordinateDistance: 1000)
@@ -133,7 +153,7 @@ extension ViewController: MKMapViewDelegate, UITableViewDataSource, UITableViewD
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let identifier = "what is this?"
         var view: MKMarkerAnnotationView
-
+        
         if let dequeuedView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView {
             dequeuedView.annotation = annotation
             view = dequeuedView
@@ -141,18 +161,18 @@ extension ViewController: MKMapViewDelegate, UITableViewDataSource, UITableViewD
             view = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
             view.canShowCallout = true
             view.calloutOffset = CGPoint(x: 0, y: 1)
-
+            
             let button = UIButton(type: .detailDisclosure)
             button.tag = 10000
             
             view.rightCalloutAccessoryView = button
-
+            
             view.tintColor = UIColor.systemRed
         }
-
+        
         if let myAnnotation = annotation as? MyAnnotation {
             view.glyphText = myAnnotation.glyphText
-
+            
             if let iconUrl = myAnnotation.iconUrl {
                 setImageFromUrl(iconUrl) { image in
                     DispatchQueue.main.async {
@@ -162,10 +182,10 @@ extension ViewController: MKMapViewDelegate, UITableViewDataSource, UITableViewD
                 }
             }
         }
-
+        
         return view
     }
-
+    
     private func markerTintColor(for temperature: Float) -> UIColor {
         switch temperature {
         case ...0: return .green
@@ -196,8 +216,8 @@ extension ViewController: MKMapViewDelegate, UITableViewDataSource, UITableViewD
         
         task.resume()
     }
-
-
+    
+    
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         guard let coordinates = view.annotation?.coordinate else {
             return
@@ -215,26 +235,50 @@ extension ViewController: MKMapViewDelegate, UITableViewDataSource, UITableViewD
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return listItems.count
+        return locationItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        let listItem = listItems[indexPath.row]
-        cell.textLabel?.text = listItem.title
-        cell.detailTextLabel?.text = listItem.description
+        let locationItem = locationItems[indexPath.row]
+        
+        var content = cell.defaultContentConfiguration()
+        
+        content.text = locationItem.locationName
+        content.secondaryText = locationItem.temperature
+        
+        setImageFromUrl(locationItem.weatherIconUrl) { image in
+            DispatchQueue.main.async {
+                content.image = image
+                cell.contentConfiguration = content
+            }
+        }
+        
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let locationItem = locationItems[indexPath.row]
+        let region = MKCoordinateRegion(center: locationItem.coordinate,
+                                        latitudinalMeters: 1000,
+                                        longitudinalMeters: 1000)
+        mapView.setRegion(region, animated: true)
+        
+        let annotation = MyAnnotation(coordinate: locationItem.coordinate,
+                                      title: locationItem.locationName,
+                                      subtitle: locationItem.temperature,
+                                      iconUrl: locationItem.weatherIconUrl,
+                                      temperature: locationItem.temperatureValue)
+        
+        mapView.removeAnnotations(mapView.annotations)
+        mapView.addAnnotation(annotation)
+        
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
 }
 
-var listItems = [
-    ListItem(title: "Item 1", description: "This is the first item"),
-    ListItem(title: "Item 2", description: "This is the second item"),
-    ListItem(title: "Item 3", description: "This is the third item")
-]
-
+var locationItems: [LocationItem] = []
 
 class MyAnnotation: NSObject, MKAnnotation {
     var coordinate: CLLocationCoordinate2D
@@ -244,7 +288,7 @@ class MyAnnotation: NSObject, MKAnnotation {
     var iconUrl: String?
     var temperature: Float?
     
-    init(coordinate: CLLocationCoordinate2D, title: String, subtitle: String, glyphText: String? = nil, iconUrl: String? = nil, temperature: Float?) {
+    init(coordinate: CLLocationCoordinate2D, title: String, subtitle: String, glyphText: String? = nil, iconUrl: String? = nil, temperature: Float? = nil) {
         self.coordinate = coordinate
         self.title = title
         self.subtitle = subtitle
@@ -258,9 +302,9 @@ class MyAnnotation: NSObject, MKAnnotation {
 
 private func getUrl(query: String) -> URL? {
     let baseUrl = "https://api.weatherapi.com"
-    let endpoint = "/v1/current.json"
+    let endpoint = "/v1/forecast.json"
     let apiKey = "13c1c685a3a74754bab182229232003"
-    guard let url = "\(baseUrl)\(endpoint)?key=\(apiKey)&q=\(query)"
+    guard let url = "\(baseUrl)\(endpoint)?key=\(apiKey)&q=\(query)&days=1"
         .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
         return nil
     }
@@ -270,30 +314,10 @@ private func getUrl(query: String) -> URL? {
     return URL(string: url)
 }
 
-struct ListItem {
-    var title: String
-    var description: String
-}
-
-
-struct WeatherResponse: Decodable {
-    let location: Location
-    let current: Weather
-}
-
-struct Location: Decodable {
-    let name: String
-}
-
-struct Weather: Decodable {
-    let temp_c: Float
-    let temp_f: Float
-    let is_day: Int
-    let condition: Conditions
-}
-
-struct Conditions: Decodable {
-    let code: Int
-    let text: String
-    let icon: String
+struct LocationItem {
+    var locationName: String
+    var temperature: String
+    var weatherIconUrl: String
+    var coordinate: CLLocationCoordinate2D
+    var temperatureValue: Float
 }

@@ -9,24 +9,19 @@ import UIKit
 
 class DetailsViewController: UIViewController, UITextFieldDelegate {
     
+    weak var delegate: DetailsViewControllerDelegate?
     
     @IBOutlet weak var conditionsLabel: UILabel!
-    
     @IBOutlet weak var searchTextField: UITextField!
-    
-    
     @IBOutlet weak var weatherImage: UIImageView!
-    
-    
     @IBOutlet weak var tempratureLabel: UILabel!
-    
-    
     @IBOutlet weak var locationName: UILabel!
     
     var cel: Float = 0.00
     var far: Float = 0.00
     var toggle = true
     var responseData: WeatherResponse?
+    let firstScreen = "firstScreen"
 
     override func viewDidLoad() {
         searchTextField.delegate = self
@@ -64,8 +59,11 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func addWeatherLocationBtn(_ sender: UIButton) {
         
+        if let responseData = self.responseData {
+            delegate?.didAddWeatherData(responseData)
+        }
+        dismiss(animated: true)
     }
-    
     
     func loadWeather(search: String?) {
         guard let search = search else {
@@ -89,9 +87,6 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
             
             
             if let weatherResponse = self.parseJson(data: data) {
-                print(weatherResponse.location.name)
-                print(weatherResponse.current.temp_c)
-                print(weatherResponse.current.condition)
                 
                 self.responseData = weatherResponse
                 
@@ -143,9 +138,9 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
     
     private func getUrl(query: String) -> URL? {
         let baseUrl = "https://api.weatherapi.com"
-        let endpoint = "/v1/current.json"
+        let endpoint = "/v1/forecast.json"
         let apiKey = "13c1c685a3a74754bab182229232003"
-        guard let url = "\(baseUrl)\(endpoint)?key=\(apiKey)&q=\(query)"
+        guard let url = "\(baseUrl)\(endpoint)?key=\(apiKey)&q=\(query)&days=1"
             .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             return nil
         }
@@ -166,29 +161,10 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
         return weather
     }
     
-    struct WeatherResponse: Decodable {
-        let location: Location
-        let current: Weather
-    }
+}
 
-    struct Location: Decodable {
-        let name: String
-    }
-
-    struct Weather: Decodable {
-        let temp_c: Float
-        let temp_f: Float
-        let is_day: Int
-        let condition: Conditions
-    }
-
-    struct Conditions: Decodable {
-        let code: Int
-        let text: String
-        let icon: String
-    }
-
-    
+protocol DetailsViewControllerDelegate: AnyObject {
+    func didAddWeatherData(_ data: WeatherResponse)
 }
 
 

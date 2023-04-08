@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		D0353E8929E1CA2600E3B7CE /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0353E8829E1CA2600E3B7CE /* DetailsViewController.swift */; };
+		D0353E8B29E1E93100E3B7CE /* WeatherModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0353E8A29E1E93100E3B7CE /* WeatherModels.swift */; };
 		D08B74A029DF63AE00D70CE3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08B749F29DF63AE00D70CE3 /* AppDelegate.swift */; };
 		D08B74A229DF63AE00D70CE3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08B74A129DF63AE00D70CE3 /* SceneDelegate.swift */; };
 		D08B74A429DF63AE00D70CE3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D08B74A329DF63AE00D70CE3 /* ViewController.swift */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		D0353E8829E1CA2600E3B7CE /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		D0353E8A29E1E93100E3B7CE /* WeatherModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherModels.swift; sourceTree = "<group>"; };
 		D08B749C29DF63AE00D70CE3 /* project_2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = project_2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D08B749F29DF63AE00D70CE3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D08B74A129DF63AE00D70CE3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				D08B74AA29DF63B000D70CE3 /* LaunchScreen.storyboard */,
 				D08B74AD29DF63B000D70CE3 /* Info.plist */,
 				D0353E8829E1CA2600E3B7CE /* DetailsViewController.swift */,
+				D0353E8A29E1E93100E3B7CE /* WeatherModels.swift */,
 			);
 			path = project_2;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 				D08B74A029DF63AE00D70CE3 /* AppDelegate.swift in Sources */,
 				D08B74A229DF63AE00D70CE3 /* SceneDelegate.swift in Sources */,
 				D0353E8929E1CA2600E3B7CE /* DetailsViewController.swift in Sources */,
+				D0353E8B29E1E93100E3B7CE /* WeatherModels.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
