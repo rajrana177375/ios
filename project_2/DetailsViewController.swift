@@ -48,16 +48,16 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    @IBAction func searchLocation(_ sender: UITextField) {
+    @IBAction func search(_ sender: UIButton) {
         loadWeather(search: searchTextField.text)
+
     }
-    
     
     @IBAction func cancelBtn(_ sender: UIButton) {
         dismiss(animated: true)
     }
     
-    @IBAction func addWeatherLocationBtn(_ sender: UIButton) {
+    @IBAction func addWeatherLocationBtn(_ sender: Any) {
         
         if let responseData = self.responseData {
             delegate?.didAddWeatherData(responseData)
@@ -139,7 +139,7 @@ class DetailsViewController: UIViewController, UITextFieldDelegate {
     private func getUrl(query: String) -> URL? {
         let baseUrl = "https://api.weatherapi.com"
         let endpoint = "/v1/forecast.json"
-        let apiKey = "13c1c685a3a74754bab182229232003"
+        let apiKey = "cf846bd7fcce44f797031444230904"
         guard let url = "\(baseUrl)\(endpoint)?key=\(apiKey)&q=\(query)&days=1"
             .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             return nil

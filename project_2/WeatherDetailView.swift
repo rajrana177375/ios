@@ -101,7 +101,7 @@ class WeatherDetailView: UIViewController, UITableViewDelegate
     private func getUrl(query: String) -> URL? {
         let baseUrl = "https://api.weatherapi.com"
         let endpoint = "/v1/forecast.json"
-        let apiKey = "13c1c685a3a74754bab182229232003"
+        let apiKey = "cf846bd7fcce44f797031444230904"
         guard let url = "\(baseUrl)\(endpoint)?key=\(apiKey)&q=\(query)&days=7"
             .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
             return nil
